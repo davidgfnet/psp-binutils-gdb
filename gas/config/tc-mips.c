@@ -8884,16 +8884,23 @@ match_vfpu_operand (struct mips_arg_info *arg,
 
       /* Do it N times, depending on the register size */
       for (unsigned i = 0; i <= vfpuop->extra; i++) {
+        unsigned int chnv = arg->token->u.channels;
         if (arg->token->type != OT_CHANNELS) {
           set_insn_error (arg->argnum, _("mismatched prefix size, too few elements"));
           return false;
         }
 
-        if ((!isdest && (arg->token->u.channels & PFX_DEST)) ||
-            ( isdest && (arg->token->u.channels & (PFX_CONST|PFX_SWZ|PFX_NEG|PFX_ABS))))
+        if ((!isdest && (chnv & PFX_DEST)) ||
+            ( isdest && (chnv & (PFX_CONST|PFX_SWZ|PFX_NEG|PFX_ABS))))
           return false;
 
-        opcode |= parse_vfpu_spfx_channel(arg->token->u.channels, i);
+        /* Check whether this channel is even allowed */
+        if (!(chnv & PFX_CONST) && ((chnv & 3) > vfpuop->extra)) {
+          set_insn_error (arg->argnum, _("swizzle operand is out of range"));
+          return false;
+        }
+
+        opcode |= parse_vfpu_spfx_channel(chnv, i);
         /* Move to the next element */
         ++arg->token;
       }
