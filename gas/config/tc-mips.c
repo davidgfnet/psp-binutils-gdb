@@ -8871,15 +8871,15 @@ match_vfpu_operand (struct mips_arg_info *arg,
                  vfpuop->op_type == OP_VFPU_REGT ? "vpfxt" : "vpfxd");
 
       /* Check whether the prefixes are allowed */
-      if (vfpuop->op_type == OP_VFPU_REGS && vfpuop->pfxcompat == 'y') {
+      if (vfpuop->op_type == OP_VFPU_REGS && vfpuop->pfxcompat == 'f') {
         set_insn_error (arg->argnum, _("source reg does not support prefixes"));
         return false;
       }
-      if (vfpuop->op_type == OP_VFPU_REGT && vfpuop->pfxcompat == 'x') {
+      if (vfpuop->op_type == OP_VFPU_REGT && vfpuop->pfxcompat == 'f') {
         set_insn_error (arg->argnum, _("target reg does not support prefixes"));
         return false;
       }
-      if (isdest && vfpuop->pfxcompat == 'z') {
+      if (isdest && vfpuop->pfxcompat == 'f') {
         set_insn_error (arg->argnum, _("destination reg does not support prefixes"));
         return false;
       }
@@ -14975,28 +14975,28 @@ macro (struct mips_cl_insn *ip, char *str)
       s = "lv.s";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?m0x,?o(b)";
+      fmt = "?m0f,?o(b)";
       op[0] = vmreg;
       goto ld;
     case M_LV_Q_AB:
       s = "lv.q";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld;
     case M_LVL_Q_AB:
       s = "lvl.q";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld;
     case M_LVR_Q_AB:
       s = "lvr.q";
       /* Itbl support may require additional care here.  */                                                                                  
       coproc = 1;                                                                                                                            
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld;
     case M_LWL_AB:
@@ -15168,7 +15168,7 @@ macro (struct mips_cl_insn *ip, char *str)
       s = "sv.s";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?m0x,?o(b)";
+      fmt = "?m0f,?o(b)";
       op[0] = vmreg;
       goto ld_st;
     case M_SV_Q_AB:
@@ -15178,21 +15178,21 @@ macro (struct mips_cl_insn *ip, char *str)
    s = "sv.q";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld_st;
     case M_SVL_Q_AB:
       s = "svl.q";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld_st;
     case M_SVR_Q_AB:
       s = "svr.q";
       /* Itbl support may require additional care here.  */
       coproc = 1;
-      fmt = "?n3x,?o(b)";
+      fmt = "?n3f,?o(b)";
       op[0] = vmreg;
       goto ld_st;
     case M_SWL_AB:
@@ -15827,7 +15827,7 @@ macro (struct mips_cl_insn *ip, char *str)
        {
          load_register (AT, &imm_expr, 0);
          macro_build ((expressionS *) NULL,
-              "mtv", "t,?d0z", AT, vtreg_s);
+              "mtv", "t,?d0f", AT, vtreg_s);
          vat = 1;
        }
      else
@@ -15838,7 +15838,7 @@ macro (struct mips_cl_insn *ip, char *str)
                 ".lit4") == 0
              && offset_expr.X_add_number == 0);
          macro_build (&offset_expr,
-              "lv.s", "?m0x,?o(b)", vtreg_s,
+              "lv.s", "?m0f,?o(b)", vtreg_s,
               (int) BFD_RELOC_MIPS_LITERAL, mips_gp_register);
        }
 
@@ -15895,7 +15895,7 @@ macro (struct mips_cl_insn *ip, char *str)
 
      load_register (AT, &imm_expr, 0);
      macro_build ((expressionS *) NULL,
-              "mtv", "t,?d0z", AT, vtreg_s);
+              "mtv", "t,?d0f", AT, vtreg_s);
 
      if (rxc)
        vtreg_s += (1 << VF_SH_MR_IDX);
@@ -16456,19 +16456,19 @@ macro (struct mips_cl_insn *ip, char *str)
 
     case M_VCMOV_S:
       s = "vcmovt.s";
-      fmt = "?d0d,?s0s,?e";
+      fmt = "?d0a,?s0a,?e";
       goto vcmov;
     case M_VCMOV_P:
       s = "vcmovt.p";
-      fmt = "?d1d,?s1s,?e";
+      fmt = "?d1a,?s1a,?e";
       goto vcmov;
     case M_VCMOV_T:
       s = "vcmovt.t";
-      fmt = "?d2d,?s2s,?e";
+      fmt = "?d2a,?s2a,?e";
       goto vcmov;
     case M_VCMOV_Q:
       s = "vcmovt.q";
-      fmt = "?d3d,?s3s,?e";
+      fmt = "?d3a,?s3a,?e";
     vcmov:
       macro_build ((expressionS *) NULL, s, fmt,
           vdreg, vsreg,
@@ -17095,7 +17095,7 @@ macro (struct mips_cl_insn *ip, char *str)
       macro_build (&offset_expr, "lwr", "t,o(b)",
                    AT, (int) BFD_RELOC_LO16, breg);
 
-      macro_build ((expressionS *) NULL, "mtv", "t,?d0z",
+      macro_build ((expressionS *) NULL, "mtv", "t,?d0f",
           AT, vmreg);
       break;
 
@@ -17104,10 +17104,10 @@ macro (struct mips_cl_insn *ip, char *str)
       if (offset_expr.X_add_number >= 0x8000 - off)
         as_bad (_("operand overflow"));
       offset_expr.X_add_number += off;
-      macro_build (&offset_expr, "lvl.q", "?n3x,?o(b)",
+      macro_build (&offset_expr, "lvl.q", "?n3f,?o(b)",
                    vmreg, (int) BFD_RELOC_LO16, breg);
       offset_expr.X_add_number -= off;
-      macro_build (&offset_expr, "lvr.q", "?n3x,?o(b)",
+      macro_build (&offset_expr, "lvr.q", "?n3f,?o(b)",
                    vmreg, (int) BFD_RELOC_LO16, breg);
       return;
 
@@ -17135,7 +17135,7 @@ macro (struct mips_cl_insn *ip, char *str)
       off = 3;
       if (offset_expr.X_add_number >= 0x8000 - off)
         as_bad (_("operand overflow"));
-      macro_build ((expressionS *) NULL, "mfv", "t,?d0z",
+      macro_build ((expressionS *) NULL, "mfv", "t,?d0f",
                    AT, vmreg);
       if (mips_opts.arch != CPU_ALLEGREX)
       {
@@ -17173,10 +17173,10 @@ macro (struct mips_cl_insn *ip, char *str)
       if (offset_expr.X_add_number >= 0x8000 - off)
    as_bad (_("operand overflow"));
       offset_expr.X_add_number += off;
-      macro_build (&offset_expr, "svl.q", "?n3x,?o(b)",
+      macro_build (&offset_expr, "svl.q", "?n3f,?o(b)",
           vmreg, (int) BFD_RELOC_LO16, breg);
       offset_expr.X_add_number -= off;
-      macro_build (&offset_expr, "svr.q", "?n3x,?o(b)",
+      macro_build (&offset_expr, "svr.q", "?n3f,?o(b)",
           vmreg, (int) BFD_RELOC_LO16, breg);
       return;
 

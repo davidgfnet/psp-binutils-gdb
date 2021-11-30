@@ -157,14 +157,11 @@
 
 #define VFPU_REG_PFX(SIZE, LSB, SUBTYPE, EXTRA, PFXMODE) \
   switch (PFXMODE) { \
-  case 's': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 's', 0, 0); \
-  case 't': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 't', 0, 0); \
-  case 'd': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'd', 0, 0); \
-  case 'x': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'x', 0, 0); \
-  case 'y': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'y', 0, 0); \
-  case 'z': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'z', 0, 0); \
+  case 'a': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'a', 0, 0); \
+  case 'f': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'f', 0, 0); \
   case 'm': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'm', 0, 0); \
   case 'w': VFPU_FULL(SIZE, LSB, SUBTYPE, EXTRA, 'w', 0, 0); \
+  default: abort(); \
   };
 
 #define VFPU_EX(SIZE, LSB, SUBTYPE, EXTRA) \
