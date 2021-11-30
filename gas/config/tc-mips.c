@@ -8669,7 +8669,8 @@ static unsigned int parse_vfpu_dpfx_channel(unsigned chval, unsigned chn)
 
   if (chval & PFX_MSK)
     uval |= (0x100 << chn);
-  uval |= (chval & 0x3) << (chn * 2);
+  else
+    uval |= (chval & 0x3) << (chn * 2);
   return uval;
 }
 
@@ -8895,6 +8896,15 @@ match_vfpu_operand (struct mips_arg_info *arg,
             return false;
           }
           ++arg->token;
+
+          if (isdest && vfpuop->pfxcompat == 'm' && !(chnv & PFX_MSK) && chnv != 0) {
+            set_insn_error (arg->argnum, _("instruction can only do masking in destination prefix"));
+            return false;
+          }
+          if (!isdest && vfpuop->pfxcompat == 'w' && (chnv & (PFX_CONST|PFX_NEG|PFX_ABS))) {
+            set_insn_error (arg->argnum, _("instruction can only perform swizzle in source prefix"));
+            return false;
+          }
         }
 
         if (isdest) {
