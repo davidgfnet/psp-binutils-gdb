@@ -76,261 +76,196 @@ static const char * const vrot_dect[32][4] = {
 #define VFPU_CONDCODE_NI   14
 #define VFPU_CONDCODE_NS   15
 
-////////////////////////////////////
-// data type
-#define VFPU_MASK_DTYPE        0x8080
-#define VFPU_QUAD      0x8080
-#define VFPU_TRIPLE        0x8000
-#define VFPU_PAIR      0x0080
-#define VFPU_SINGLE        0x0000
 
-////////////////////////////////////
-// register index
-#define VFPU_MASK_VT       0x7f0000
-#define VFPU_MASK_VS       0x007f00
-#define VFPU_MASK_VD       0x00007f
+#define VF_BITCNT_VT     7
+#define VF_SH_VT       16
+#define VF_BITCNT_VS     7
+#define VF_SH_VS       8
+#define VF_BITCNT_VD     7
+#define VF_SH_VD       0
+#define VF_BITCNT_VML        5
+#define VF_MASK_VML        0x1f
+#define VF_SH_VML      16
+#define VF_BITCNT_VMH        2
+#define VF_MASK_VMH        0x3
+#define VF_SH_VMH      0
+#define VF_BITCNT_VNL        5
+#define VF_MASK_VNL        0x1f
+#define VF_SH_VNL      16
+#define VF_BITCNT_VNH        1
+#define VF_MASK_VNH        0x1
+#define VF_SH_VNH      0
+#define VF_BITCNT_OFFSET     14
+#define VF_MASK_OFFSET     0x3fff
+#define VF_SH_OFFSET       2
+#define VF_BITCNT_CC    4
+#define VF_SH_CC       0
+#define VF_BITCNT_CONST      5
+#define VF_SH_CONST        16
+#define VF_BITCNT_SCALE      5
+#define VF_SH_SCALE        16
+#define VF_BITCNT_BCOND      3
+#define VF_SH_BCOND        18
+#define VF_BITCNT_MCOND      3
+#define VF_MASK_MCOND      0x7
+#define VF_SH_MCOND        16
+#define VF_BITCNT_VCD        8
+#define VF_SH_VCD      0
+#define VF_BITCNT_VCS        8
+#define VF_SH_VCS      8
+#define VF_BITCNT_ROT        5
+#define VF_SH_ROT      16
+#define VF_BITCNT_WRAP       8
+#define VF_SH_WRAP     16
+#define VF_SH_BMCOND       0
+#define VF_BITCNT_HFLOAT     16
+#define VF_SH_HFLOAT       0
+#define VF_BITCNT_PFX       24
+#define VF_SH_PFX       0
+#define VF_BITCNT_RWB        0x1
+#define VF_SH_RWB      1
 
-////////////////////////////////////
-// condition and comapre inst
-#define VFPU_PADD_BIN_CMP  0x70
+#define    VF_MASK_PFX_SWZ     0x3
+#define    VF_SH_PFX_SWZ       0
+#define    VF_MASK_PFX_ABS     0x1
+#define    VF_SH_PFX_ABS       8
+#define    VF_MASK_PFX_CST     0x1
+#define    VF_SH_PFX_CST       12
+#define    VF_MASK_PFX_NEG     0x1
+#define    VF_SH_PFX_NEG       16
+#define    VF_MASK_PFX_SAT     0x3
+#define    VF_SH_PFX_SAT       0
+#define    VF_MASK_PFX_MSK     0x1
+#define    VF_SH_PFX_MSK       8
 
-////////////////////////////////////
-// load/store left/right
-#define VFPU_MASK_LDST_LR  0x2
-#define VFPU_LDST_L        0x0
-#define VFPU_LDST_R        0x2
+#define    VF_MASK_MR_MTX      0x7
+#define    VF_SH_MR_MTX        2
+#define    VF_MASK_MR_IDX      0x3
+#define    VF_SH_MR_IDX        0
+#define    VF_MASK_MR_FSL      0x3
+#define    VF_SH_MR_FSL        5
+#define    VF_MASK_MR_RXC      0x1
+#define    VF_SH_MR_RXC        5
+#define    VF_MASK_MR_VFSL     0x1
+#define    VF_SH_MR_VFSL       6
 
-////////////////////////////////////
-// load/store memory/buffer
-#define VFPU_MASK_LDST_MB  0x2
-#define VFPU_LDST_M        0x0
-#define VFPU_LDST_B        0x2
+#define    VF_MIN_MR       0
+#define    VF_MAX_MR       127
+#define    VF_MIN_CR       128
+#define    VF_MAX_CR       255
+#define    VF_MIN_VCR      128
+#define    VF_MAX_VCR      143
+#define    VF_MIN_CC       0
+#define    VF_MAX_CC       15
+#define    VF_MIN_CONST        1
+#define    VF_MAX_CONST        19
+#define    VF_MIN_SCALE        0
+#define    VF_MAX_SCALE        31
+#define    VF_MIN_BCOND        0
+#define    VF_MAX_BCOND        5
+#define    VF_MIN_MCOND        0
+#define    VF_MAX_MCOND        6
+#define    VF_MIN_WRAP     0
+#define    VF_MAX_WRAP     255
+#define    VF_MIN_BMCOND       0
+#define    VF_MAX_BMCOND       31
 
-////////////////////////////////////
-// coprocessor move
-#define VFPU_MASK_COP_MV   0xff80
-#define VFPU_MASK_COP_MVC  0xff00
+#define    VF_MASK_F32_SIGN    0x1
+#define    VF_SH_F32_SIGN      31
+#define    VF_MASK_F32_EXP     0xff
+#define    VF_SH_F32_EXP       23
+#define    VF_MASK_F32_FRA     0x7fffff
+#define    VF_SH_F32_FRA       0
+#define    VF_MASK_F16_SIGN    0x1
+#define    VF_SH_F16_SIGN      15
+#define    VF_MASK_F16_EXP     0x1f
+#define    VF_SH_F16_EXP       10
+#define    VF_MASK_F16_FRA     0x3ff
+#define    VF_SH_F16_FRA       0
 
-////////////////////////////////////
-// sync code
-#define    VFPU_MASK_SYNC_CODE 0xffff
-#define    VFPU_SYNC_CODE_DEFAULT  0x0320
-#define    VFPU_SYNC_CODE_NOP  0x0000
-#define    VFPU_SYNC_CODE_FLUSH    0x040d
+#define    VF_MIN_F32_EXP      0
+#define    VF_MAX_F32_EXP      255
+#define    VF_BIAS_F32_EXP     127
+#define    VF_MIN_F16_EXP      0
+#define    VF_MAX_F16_EXP      31
+#define    VF_BIAS_F16_EXP     15
 
-////////////////////////////////////
-#define VFPU_INST_BR_F     0x49000000
-#define VFPU_MASK_BR_F     0xffe30000
-#define VFPU_INST_BR_FL        0x49020000
-#define VFPU_MASK_BR_FL        0xffe30000
-#define VFPU_INST_BR_T     0x49010000
-#define VFPU_MASK_BR_T     0xffe30000
-#define VFPU_INST_BR_TL        0x49030000
-#define VFPU_MASK_BR_TL        0xffe30000
+#define OP_SH_VFPU_DELTA   0
+#define OP_MASK_VFPU_DELTA 0xfffc
+#define OP_SH_VFPU_IMM3        16
+#define OP_MASK_VFPU_IMM3  0x7
+#define OP_SH_VFPU_IMM5        16
+#define OP_MASK_VFPU_IMM5  0x1f
+#define OP_SH_VFPU_IMM8        16
+#define OP_MASK_VFPU_IMM8  0xff
+#define OP_SH_VFPU_CC      18  /* Condition code. */
+#define OP_MASK_VFPU_CC        0x7
+#define OP_SH_VFPU_CONST   16
+#define OP_MASK_VFPU_CONST 0x1f
+#define OP_SH_VFPU_COND        0   /* Conditional compare. */
+#define OP_MASK_VFPU_COND  0xf
+#define OP_SH_VFPU_VMTVC   0
+#define OP_MASK_VFPU_VMTVC 0xff
+#define OP_SH_VFPU_VMFVC   8
+#define OP_MASK_VFPU_VMFVC 0xff
+#define OP_SH_VFPU_RWB     1
+#define OP_MASK_VFPU_RWB   0x1
+#define OP_SH_VFPU_ROT     16  /* Rotators used in vrot. */
+#define OP_MASK_VFPU_ROT   0x1f
+#define OP_SH_VFPU_FLOAT16 0
+#define OP_MASK_VFPU_FLOAT16   0xffff
 
-#define VFPU_INST_COP_LD_S     0xc8000000
-#define VFPU_MASK_COP_LD_S     0xfc000000
-#define VFPU_INST_COP_ST_S     0xe8000000
-#define VFPU_MASK_COP_ST_S     0xfc000000
-#define VFPU_INST_COP_LD_Q     0xd8000000
-#define VFPU_MASK_COP_LD_Q     0xfc000000
-#define VFPU_INST_COP_ST_Q     0xf8000000
-#define VFPU_MASK_COP_ST_Q     0xfc000000
-#define VFPU_INST_COP_LD_U     0xd4000000
-#define VFPU_MASK_COP_LD_U     0xfc000000
-#define VFPU_INST_COP_ST_U     0xf4000000
-#define VFPU_MASK_COP_ST_U     0xfc000000
-#define VFPU_INST_COP_MF   0x48600000
-#define VFPU_MASK_COP_MF   0xffe00000
-#define VFPU_INST_COP_MT   0x48e00000
-#define VFPU_MASK_COP_MT   0xffe00000
+/* VFPU registers. */
+#define OP_SH_VFPU_VD      0
+#define OP_MASK_VFPU_VD        0x7f
+#define OP_SH_VFPU_VS      8
+#define OP_MASK_VFPU_VS        0x7f
+#define OP_SH_VFPU_VT      16
+#define OP_MASK_VFPU_VT        0x7f
+#define OP_SH_VFPU_VT_LO   16  /* Bits 0-4 of vt. */
+#define OP_MASK_VFPU_VT_LO 0x1f
+#define OP_SH_VFPU_VT_HI   5   /* Right-shifted. */
+#define OP_MASK_VFPU_VT_HI1    0x1 /* Bit 5 of vt. */
+#define OP_MASK_VFPU_VT_HI2    0x3 /* Bits 5-6 of vt. */
+/* Special handling of vs in vmmul instructions. */
+#define VFPU_OP_VT_VS_VD   0xff800000
+#define VFPU_OPCODE_VMMUL  0xf0000000
 
-#define VFPU_INST_BIN_ADD  0x60000000
-#define VFPU_MASK_BIN_ADD  0xff800000
-#define VFPU_INST_BIN_SUB  0x60800000
-#define VFPU_MASK_BIN_SUB  0xff800000
-#define VFPU_INST_BIN_SBN  0x61000000
-#define VFPU_MASK_BIN_SBN  0xff800000
-#define VFPU_INST_BIN_DIV  0x63800000
-#define VFPU_MASK_BIN_DIV  0xff800000
-#define VFPU_INST_BIN_MUL  0x64000000
-#define VFPU_MASK_BIN_MUL  0xff800000
-#define VFPU_INST_BIN_DOT  0x64800000
-#define VFPU_MASK_BIN_DOT  0xff800000
-#define VFPU_INST_BIN_SCL  0x65000000
-#define VFPU_MASK_BIN_SCL  0xff800000
-#define VFPU_INST_BIN_HDP  0x66000000
-#define VFPU_MASK_BIN_HDP  0xff800000
-#define VFPU_INST_BIN_CRS  0x66800000
-#define VFPU_MASK_BIN_CRS  0xff800000
-#define VFPU_INST_BIN_DET  0x67000000
-#define VFPU_MASK_BIN_DET  0xff800000
-#define VFPU_INST_BIN_CMP  0x6c000000
-#define VFPU_MASK_BIN_CMP  0xff800000
-#define VFPU_INST_BIN_MIN  0x6d000000
-#define VFPU_MASK_BIN_MIN  0xff800000
-#define VFPU_INST_BIN_MAX  0x6d800000
-#define VFPU_MASK_BIN_MAX  0xff800000
-#define VFPU_INST_BIN_SCMP     0x6e800000
-#define VFPU_MASK_BIN_SCMP     0xff800000
-#define VFPU_INST_BIN_SGE  0x6f000000
-#define VFPU_MASK_BIN_SGE  0xff800000
-#define VFPU_INST_BIN_SLT  0x6f800000
-#define VFPU_MASK_BIN_SLT  0xff800000
+/* VFPU condition codes.  FL and TR accept no arguments, while any conditions
+   above and including EZ only accept one argument.  The rest require two
+   arguments.  */
+enum
+{
+  VFPU_COND_FL, VFPU_COND_EQ, VFPU_COND_LT, VFPU_COND_LE,
+  VFPU_COND_TR, VFPU_COND_NE, VFPU_COND_GE, VFPU_COND_GT,
+  VFPU_COND_EZ, VFPU_COND_EN, VFPU_COND_EI, VFPU_COND_ES,
+  VFPU_COND_NZ, VFPU_COND_NN, VFPU_COND_NI, VFPU_COND_NS,
+  VFPU_NUM_CONDS
+};
 
-#define VFPU_INST_UNR_MOV  0xd0000000
-#define VFPU_MASK_UNR_MOV  0xffff0000
-#define VFPU_INST_UNR_ABS  0xd0010000
-#define VFPU_MASK_UNR_ABS  0xffff0000
-#define VFPU_INST_UNR_NEG  0xd0020000
-#define VFPU_MASK_UNR_NEG  0xffff0000
-#define VFPU_INST_UNR_IDT  0xd0030000
-#define VFPU_MASK_UNR_IDT  0xffff0000
-#define VFPU_INST_UNR_SAT0     0xd0040000
-#define VFPU_MASK_UNR_SAT0     0xffff0000
-#define VFPU_INST_UNR_SAT1     0xd0050000
-#define VFPU_MASK_UNR_SAT1     0xffff0000
-#define VFPU_INST_UNR_ZERO     0xd0060000
-#define VFPU_MASK_UNR_ZERO     0xffff0000
-#define VFPU_INST_UNR_ONE  0xd0070000
-#define VFPU_MASK_UNR_ONE  0xffff0000
-#define VFPU_INST_UNR_RCP  0xd0100000
-#define VFPU_MASK_UNR_RCP  0xffff0000
-#define VFPU_INST_UNR_RSQ  0xd0110000                                                                                                      
-#define VFPU_MASK_UNR_RSQ  0xffff0000
-#define VFPU_INST_UNR_SIN  0xd0120000
-#define VFPU_MASK_UNR_SIN  0xffff0000
-#define VFPU_INST_UNR_COS  0xd0130000
-#define VFPU_MASK_UNR_COS  0xffff0000
-#define VFPU_INST_UNR_EXP2     0xd0140000
-#define VFPU_MASK_UNR_EXP2     0xffff0000
-#define VFPU_INST_UNR_LOG2     0xd0150000
-#define VFPU_MASK_UNR_LOG2     0xffff0000
-#define VFPU_INST_UNR_SQR  0xd0160000
-#define VFPU_MASK_UNR_SQR  0xffff0000
-#define VFPU_INST_UNR_ASIN     0xd0170000
-#define VFPU_MASK_UNR_ASIN     0xffff0000
-#define VFPU_INST_UNR_NRCP     0xd0180000
-#define VFPU_MASK_UNR_NRCP     0xffff0000
-#define VFPU_INST_UNR_NSIN     0xd01a0000
-#define VFPU_MASK_UNR_NSIN     0xffff0000
-#define VFPU_INST_UNR_REXP2    0xd01c0000
-#define VFPU_MASK_UNR_REXP2    0xffff0000
-#define VFPU_INST_UNR_RNDS     0xd0200000
-#define VFPU_MASK_UNR_RNDS     0xffff0000
-#define VFPU_INST_UNR_RNDI     0xd0210000
-#define VFPU_MASK_UNR_RNDI     0xffff0000
-#define VFPU_INST_UNR_RNDF1    0xd0220000
-#define VFPU_MASK_UNR_RNDF1    0xffff0000
-#define VFPU_INST_UNR_RNDF2    0xd0230000
-#define VFPU_MASK_UNR_RNDF2    0xffff0000
-#define VFPU_INST_UNR_F2H  0xd0320000
-#define VFPU_MASK_UNR_F2H  0xffff0000
-#define VFPU_INST_UNR_H2F  0xd0330000
-#define VFPU_MASK_UNR_H2F  0xffff0000
-#define VFPU_INST_UNR_SBZ  0xd0360000
-#define VFPU_MASK_UNR_SBZ  0xffff0000
-#define VFPU_INST_UNR_LGB  0xd0370000
-#define VFPU_MASK_UNR_LGB  0xffff0000
-#define    VFPU_INST_UNR_US2I  0xd03a0000
-#define    VFPU_MASK_UNR_US2I  0xffff0000
-#define    VFPU_INST_UNR_S2I   0xd03b0000
-#define    VFPU_MASK_UNR_S2I   0xffff0000
-#define    VFPU_INST_UNR_I2UC  0xd03c0000
-#define    VFPU_MASK_UNR_I2UC  0xffff0000
-#define    VFPU_INST_UNR_I2C   0xd03d0000
-#define    VFPU_MASK_UNR_I2C   0xffff0000
-#define    VFPU_INST_UNR_I2US  0xd03e0000
-#define    VFPU_MASK_UNR_I2US  0xffff0000
-#define    VFPU_INST_UNR_I2S   0xd03f0000
-#define    VFPU_MASK_UNR_I2S   0xffff0000
-#define VFPU_INST_UNR_SRT1     0xd0400000
-#define VFPU_MASK_UNR_SRT1     0xffff0000
-#define VFPU_INST_UNR_SRT2     0xd0410000
-#define VFPU_MASK_UNR_SRT2     0xffff0000
-#define VFPU_INST_UNR_BFY1     0xd0420000
-#define VFPU_MASK_UNR_BFY1     0xffff0000
-#define VFPU_INST_UNR_BFY2     0xd0430000
-#define VFPU_MASK_UNR_BFY2     0xffff0000
-#define VFPU_INST_UNR_OCP  0xd0440000
-#define VFPU_MASK_UNR_OCP  0xffff0000
-#define VFPU_INST_UNR_SOCP     0xd0450000
-#define VFPU_MASK_UNR_SOCP     0xffff0000
-#define VFPU_INST_UNR_FAD  0xd0460000
-#define VFPU_MASK_UNR_FAD  0xffff0000
-#define VFPU_INST_UNR_AVG  0xd0470000
-#define VFPU_MASK_UNR_AVG  0xffff0000
-#define VFPU_INST_UNR_SRT3     0xd0480000
-#define VFPU_MASK_UNR_SRT3     0xffff0000
-#define VFPU_INST_UNR_SRT4     0xd0490000
-#define VFPU_MASK_UNR_SRT4     0xffff0000
-#define VFPU_INST_UNR_SGN  0xd04a0000
-#define VFPU_MASK_UNR_SGN  0xffff0000
-#define VFPU_INST_UNR_CF   0xd0500000
-#define VFPU_MASK_UNR_CF   0xffff0080
-#define VFPU_INST_UNR_CT   0xd0510000
-#define VFPU_MASK_UNR_CT   0xffff8000
-#define VFPU_INST_UNR_T4444    0xd0590000
-#define VFPU_MASK_UNR_T4444    0xffff0000
-#define VFPU_INST_UNR_T5551    0xd05a0000
-#define VFPU_MASK_UNR_T5551    0xffff0000
-#define VFPU_INST_UNR_T5650    0xd05b0000
-#define VFPU_MASK_UNR_T5650    0xffff0000
-#define VFPU_INST_UNR_CST  0xd0600000
-#define VFPU_MASK_UNR_CST  0xffe00000
+/* VFPU prefix instruction operands.  The *_SH_* values really specify where
+   the bitfield begins, as VFPU prefix instructions have four operands
+   encoded within the immediate field. */
+#define VFPU_SH_PFX_NEG        16
+#define VFPU_MASK_PFX_NEG  0x1 /* Negation. */
+#define VFPU_SH_PFX_CST        12
+#define VFPU_MASK_PFX_CST  0x1 /* Constant. */
+#define VFPU_SH_PFX_ABS_CSTHI  8
+#define VFPU_MASK_PFX_ABS_CSTHI    0x1 /* Abs/Constant (bit 2). */
+#define VFPU_SH_PFX_SWZ_CSTLO  0
+#define VFPU_MASK_PFX_SWZ_CSTLO    0x3 /* Swizzle/Constant (bits 0-1). */
+#define VFPU_SH_PFX_MASK   8
+#define VFPU_MASK_PFX_MASK 0x1 /* Mask. */
+#define VFPU_SH_PFX_SAT        0
+#define VFPU_MASK_PFX_SAT  0x3 /* Saturation. */
 
-#define VFPU_INST_UNRI_F2I_N   0xd2000000
-#define VFPU_MASK_UNRI_F2I_N   0xffe00000
-#define VFPU_INST_UNRI_F2I_Z   0xd2200000
-#define VFPU_MASK_UNRI_F2I_Z   0xffe00000
-#define VFPU_INST_UNRI_F2I_U   0xd2400000
-#define VFPU_MASK_UNRI_F2I_U   0xffe00000
-#define VFPU_INST_UNRI_F2I_D   0xd2600000
-#define VFPU_MASK_UNRI_F2I_D   0xffe00000
-#define VFPU_INST_UNRI_I2F     0xd2800000
-#define VFPU_MASK_UNRI_I2F     0xffe00000
-#define VFPU_INST_UNRI_CMOV_T  0xd2a00000
-#define VFPU_MASK_UNRI_CMOV_T  0xfff80000
-#define VFPU_INST_UNRI_CMOV_F  0xd2a80000
-#define VFPU_MASK_UNRI_CMOV_F  0xfff80000
-#define VFPU_INST_UNRI_WBN     0xd3000000
-#define VFPU_MASK_UNRI_WBN     0xff000000
-
-#define VFPU_INST_PFX_RA   0xdc000000
-#define VFPU_MASK_PFX_RA   0xff000000
-#define VFPU_INST_PFX_RB   0xdd000000
-#define VFPU_MASK_PFX_RB   0xff000000
-#define VFPU_INST_PFX_W    0xde000000
-#define VFPU_MASK_PFX_W    0xff000000
-#define VFPU_INST_IIM      0xdf000000
-#define VFPU_MASK_IIM      0xff800000
-#define VFPU_INST_FIM      0xdf800000
-#define VFPU_MASK_FIM      0xff800000
-
-#define VFPU_INST_RPT_MMUL     0xf0000000
-#define VFPU_MASK_RPT_MMUL     0xff800000
-#define VFPU_INST_RPT_TFM2     0xf0800000
-#define VFPU_MASK_RPT_TFM2     0xff800000
-#define VFPU_INST_RPT_TFM3     0xf1000000
-#define VFPU_MASK_RPT_TFM3     0xff800000
-#define VFPU_INST_RPT_TFM4     0xf1800000
-#define VFPU_MASK_RPT_TFM4     0xff800000
-#define VFPU_INST_RPT_MSCL     0xf2000000
-#define VFPU_MASK_RPT_MSCL     0xff800000
-#define VFPU_INST_RPT_QMUL     0xf2800000
-#define VFPU_MASK_RPT_QMUL     0xff800000
-#define VFPU_INST_RPT_MMOV     0xf3800000
-#define VFPU_MASK_RPT_MMOV     0xffff0000
-#define VFPU_INST_RPT_MIDT     0xf3830000
-#define VFPU_MASK_RPT_MIDT     0xffff0000
-#define VFPU_INST_RPT_MZERO    0xf3860000
-#define VFPU_MASK_RPT_MZERO    0xffff0000
-#define VFPU_INST_RPT_MONE     0xf3870000
-#define VFPU_MASK_RPT_MONE     0xffff0000
-#define VFPU_INST_RPT_ROT  0xf3a00000
-#define VFPU_MASK_RPT_ROT  0xffe00000
-
-#define VFPU_INST_SYNC     0xffff0000
-#define VFPU_MASK_SYNC     0xffff0000
+/* VFPU 16-bit floating-point format. */
+#define VFPU_FLOAT16_EXP_MAX   0x1f
+#define VFPU_SH_FLOAT16_SIGN   15
+#define VFPU_MASK_FLOAT16_SIGN 0x1
+#define VFPU_SH_FLOAT16_EXP    10
+#define VFPU_MASK_FLOAT16_EXP  0x1f
+#define VFPU_SH_FLOAT16_FRAC   0
+#define VFPU_MASK_FLOAT16_FRAC 0x3ff
 
 #endif /* _VFPU_H_ */

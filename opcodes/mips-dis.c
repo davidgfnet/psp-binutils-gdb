@@ -602,10 +602,6 @@ static const char * const vfpu_const_names[20] = {
   "VFPU_SQRT3_2"
 };
 
-#define VFPU_NUM_CONSTANTS \
-  ((sizeof vfpu_const_names) / (sizeof (vfpu_const_names[0])))
-const unsigned int vfpu_num_constants = VFPU_NUM_CONSTANTS;
-
 static const char * const vfpu_rwb_names[2] = {
   "wt",  "wb"
 };
@@ -1482,7 +1478,7 @@ print_vfpu_arg (struct disassemble_info *info, const struct mips_opcode *opcode,
       break;
 
     case OP_VFPU_NCNT:
-      if (uval < vfpu_num_constants)
+      if (uval >= VF_MIN_CONST && uval <= VF_MAX_CONST)
         infprintf (is, "%s", vfpu_const_names[uval]);
       break;
 

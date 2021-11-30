@@ -9009,30 +9009,30 @@ match_vfpu_operand (struct mips_arg_info *arg,
 
     if (arg->token->u.flt.length == 4) {
       unsigned int f32 = bfd_getl32 (arg->token->u.flt.data);
-      unsigned int sign = f32 >> 31;
-      unsigned int mantissa = f32 & 0x7fffff;
-      unsigned int exponent = (f32 >> 23) & 0xff;
+      unsigned int sign = (f32 >> VF_SH_F32_SIGN) & VF_MASK_F32_SIGN;
+      unsigned int mantissa = (f32 >> VF_SH_F32_FRA) & VF_MASK_F32_FRA;
+      unsigned int exponent = (f32 >> VF_SH_F32_EXP) & VF_MASK_F32_EXP;
 
-      if (exponent == 255) {
+      if (exponent == VF_MAX_F32_EXP) {
         if (mantissa)
-          uval = (sign << 15) | 0x7fff;  // NaN
+          uval = (sign << VF_SH_F16_SIGN) | 0x7fff;  // NaN
         else
-          uval = (sign << 15) | 0x7c00;  // Inf
+          uval = (sign << VF_SH_F16_SIGN) | 0x7c00;  // Inf
       }
       else {
-        // Convert exponent from 0..254 (-127..127)
-        // to 0..31 (-15..15)
-        int sexp = (signed)exponent - 127;
-        if (sexp > 15)
-          sexp = 15;
-        else if (sexp < -15)
-          sexp = -15;
-        exponent = sexp + 15;
+        // Convert exponent from 0..254 (-127..127) to 0..31 (-15..15). 
+        // This just converts exponents around its biases.
+        int sexp = (signed)exponent - VF_BIAS_F32_EXP;
+        if (sexp > VF_BIAS_F16_EXP)
+          sexp = VF_BIAS_F16_EXP;
+        else if (sexp < -VF_BIAS_F16_EXP)
+          sexp = -VF_BIAS_F16_EXP;
+        exponent = sexp + VF_BIAS_F16_EXP;
 
         // Reduce mantissa precision
-        mantissa = mantissa >> 13;
+        mantissa = mantissa >> (VF_SH_F32_EXP - VF_SH_F16_EXP);
 
-        uval = (sign << 15) | (exponent << 10) | mantissa;
+        uval = (sign << VF_SH_F16_SIGN) | (exponent << VF_SH_F16_EXP) | mantissa;
       }
 
       insn_insert_operand (arg->insn, operand, uval);
