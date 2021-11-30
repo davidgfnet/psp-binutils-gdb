@@ -8666,6 +8666,7 @@ static unsigned int parse_vfpu_spfx_channel(unsigned chval, unsigned chn)
 static unsigned int parse_vfpu_dpfx_channel(unsigned chval, unsigned chn)
 {
   unsigned int uval = 0;
+
   if (chval & PFX_MSK)
     uval |= (0x100 << chn);
   uval |= (chval & 0x3) << (chn * 2);
@@ -8882,27 +8883,41 @@ match_vfpu_operand (struct mips_arg_info *arg,
         return false;
       }
 
-      /* Do it N times, depending on the register size */
-      for (unsigned i = 0; i <= vfpuop->extra; i++) {
-        unsigned int chnv = arg->token->u.channels;
-        if (arg->token->type != OT_CHANNELS) {
-          set_insn_error (arg->argnum, _("mismatched prefix size, too few elements"));
-          return false;
+      /* Fill all elements, even if they are not needed (binary compat) */
+      for (unsigned i = 0; i < 4; i++) {
+        /* Mantains a default that's binary compatible, should not matter */
+        unsigned int chnv = isdest ? PFX_MSK : 0;
+        if (i <= vfpuop->extra) {
+          /* Only if this is required, otherwise will fill chnv=0 */
+          chnv = arg->token->u.channels;
+          if (arg->token->type != OT_CHANNELS) {
+            set_insn_error (arg->argnum, _("mismatched prefix size, too few elements"));
+            return false;
+          }
+          ++arg->token;
         }
 
-        if ((!isdest && (chnv & PFX_DEST)) ||
-            ( isdest && (chnv & (PFX_CONST|PFX_SWZ|PFX_NEG|PFX_ABS))))
-          return false;
+        if (isdest) {
+          if (chnv & (PFX_CONST|PFX_SWZ|PFX_NEG|PFX_ABS)) {
+            set_insn_error (arg->argnum, _("destination prefix cannot contain swizzle, "
+                            "negation, constants or absolute value operations"));
+            return false;
+          }
 
-        /* Check whether this channel is even allowed */
-        if (!(chnv & PFX_CONST) && ((chnv & 3) > vfpuop->extra)) {
-          set_insn_error (arg->argnum, _("swizzle operand is out of range"));
-          return false;
+          opcode |= parse_vfpu_dpfx_channel(chnv, i);
+        } else {
+          if (chnv & PFX_DEST) {
+            set_insn_error (arg->argnum, _("source prefix cannot contain masking or saturation operations"));
+            return false;
+          }
+
+          /* Check whether this channel is even allowed */
+          if (!(chnv & PFX_CONST) && ((chnv & 3) > vfpuop->extra)) {
+            set_insn_error (arg->argnum, _("swizzle operand is out of range"));
+            return false;
+          }
+          opcode |= parse_vfpu_spfx_channel(chnv, i);
         }
-
-        opcode |= parse_vfpu_spfx_channel(chnv, i);
-        /* Move to the next element */
-        ++arg->token;
       }
 
       if (arg->token->type == OT_CHANNELS)
