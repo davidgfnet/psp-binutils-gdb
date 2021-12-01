@@ -1497,15 +1497,6 @@ print_vfpu_arg (struct disassemble_info *info, const struct mips_opcode *opcode,
         infprintf (is, "[");
       break;
 
-    case OP_VFPU_OFFSET:
-    {
-      unsigned int delta = (uval << 2) & OP_MASK_VFPU_DELTA;
-      if (delta & 0x8000)
-        delta |= ~0xffff;
-      infprintf (is, "%d", delta);
-      break;
-    }
-
     case OP_VFPU_WRB_BOOL:
       infprintf (is, "%s", vfpu_rwb_names[uval & OP_MASK_VFPU_RWB]);
       break;

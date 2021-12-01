@@ -480,9 +480,6 @@ enum mips_vfpu_operand_type {
   /* Write back boolean (1 bit, used by sv.q) */
   OP_VFPU_WRB_BOOL,
 
-  /* Memory offset operand (14 bit).  */
-  OP_VFPU_OFFSET,
-  
   /* A dummy operand, as a decorator */
   OP_VFPU_DECORATOR
 };

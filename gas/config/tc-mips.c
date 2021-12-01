@@ -9042,11 +9042,6 @@ match_vfpu_operand (struct mips_arg_info *arg,
     }
     return true;
 
-  case OP_VFPU_OFFSET:
-    // ???
-    printf("OFFSET\n");
-    return false;
-
   case OP_VFPU_DECORATOR:
     ++arg->token;
     return true;

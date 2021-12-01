@@ -229,9 +229,8 @@ decode_mips_operand (const char *p)
        }
        break;
 
-     /* TODO Figure out how to the the weird offset */
-     case 'o': /*VFPU (VF_BITCNT_OFFSET, VF_SH_OFFSET, OFFSET);  break;*/
-               INT_ADJ(VF_BITCNT_OFFSET, VF_SH_OFFSET, (1 << (VF_BITCNT_OFFSET - 1)) - 1, VF_SH_OFFSET, false); break;
+     /* Using a regular offset type, not sure whether this is OK ... */
+     case 'o': INT_ADJ(VF_BITCNT_OFFSET, VF_SH_OFFSET, (1 << (VF_BITCNT_OFFSET - 1)) - 1, VF_SH_OFFSET, false); break;
 
      case 's':
      case 't':
