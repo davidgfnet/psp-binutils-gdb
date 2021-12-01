@@ -339,6 +339,18 @@ static const char * const vfpu_mqreg_names[128] = {
   "",  "",  "",  "",  "",  "",  "",  ""
 };
 
+static const char * const * const vfpu_regnames[] = {
+  vfpu_sreg_names,
+  vfpu_vpreg_names,
+  vfpu_vtreg_names,
+  vfpu_vqreg_names,
+  NULL,
+  vfpu_mpreg_names,
+  vfpu_mtreg_names,
+  vfpu_mqreg_names
+};
+
+
 static const struct mips_cp0sel_name mips_cp0sel_names_mips3264[] =
 {
   { 16, 1, "c0_config1"		},
@@ -1512,24 +1524,8 @@ print_vfpu_arg (struct disassemble_info *info, const struct mips_opcode *opcode,
     case OP_VFPU_REGX:
     case OP_VFPU_REG2:
     {
-      switch (operand->extra) {
-      case 0:
-        infprintf (is, "%s.s", vfpu_sreg_names [uval]); break;
-      case 1:
-        infprintf (is, "%s.p", vfpu_vpreg_names[uval]); break;
-      case 2:
-        infprintf (is, "%s.t", vfpu_vtreg_names[uval]); break;
-      case 3:
-        infprintf (is, "%s.q", vfpu_vqreg_names[uval]); break;
-      case 5:
-        infprintf (is, "%s.p", vfpu_mpreg_names[uval]); break;
-      case 6:
-        infprintf (is, "%s.t", vfpu_mtreg_names[uval]); break;
-      case 7:
-        infprintf (is, "%s.q", vfpu_mqreg_names[uval]); break;
-      default:
-        abort();
-      }
+      static const char *tarr = "sptq?ptq";
+      infprintf (is, "%s.%c", vfpu_regnames[operand->extra][uval], tarr[operand->extra]);
       break;
     }
 
