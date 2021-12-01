@@ -9015,9 +9015,11 @@ match_vfpu_operand (struct mips_arg_info *arg,
 
       if (exponent == VF_MAX_F32_EXP) {
         if (mantissa)
-          uval = (sign << VF_SH_F16_SIGN) | 0x7fff;  // NaN
+          // Infinite (max exponent, non-zero mantissa, picked 1 arbitrarily)
+          uval = (sign << VF_SH_F16_SIGN) | (VF_MAX_F16_EXP << VF_SH_F16_EXP) | 1;
         else
-          uval = (sign << VF_SH_F16_SIGN) | 0x7c00;  // Inf
+          // Infinite (max exponent, zero mantissa)
+          uval = (sign << VF_SH_F16_SIGN) | (VF_MAX_F16_EXP << VF_SH_F16_EXP);
       }
       else {
         // Convert exponent from 0..254 (-127..127) to 0..31 (-15..15). 
