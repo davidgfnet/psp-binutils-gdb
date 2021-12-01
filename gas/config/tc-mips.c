@@ -6582,6 +6582,10 @@ file_mips_check_options (void)
 
   /* End of GCC-shared inference code.  */
 
+  /* R5900 and ALLEGREX only support single hardware mode */
+  if (CPU_IS_ALLEGREX (mips_opts.arch) || mips_opts.arch == CPU_R5900)
+    file_mips_opts.single_float = true;
+
   /* This flag is set when we have a 64-bit capable CPU but use only
      32-bit wide registers.  Note that EABI does not use it.  */
   if (ISA_HAS_64BIT_REGS (file_mips_opts.isa)
